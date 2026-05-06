@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CPU SCHEDULING SIMULATOR</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-title">
+      CPU&nbsp;SCHEDULING
+      <span class="cursor"></span>
+    </div>
+    <div class="dots">
+      <div class="dot g"></div>
+      <div class="dot a"></div>
+      <div class="dot r"></div>
+    </div>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div class="layout">
+
+    <!-- ████ LEFT PANEL ████ -->
+    <div class="lpanel">
+
+      <div class="sec-head">Select Algorithm</div>
+      <div class="sec-body">
+        <div class="algo-row">
+          <button class="abtn fcfs active" onclick="selAlgo('fcfs',this)">FCFS</button>
+          <button class="abtn sjf"         onclick="selAlgo('sjf',this)">SJF</button>
+          <button class="abtn npp"         onclick="selAlgo('npp',this)">NPP</button>
+          <button class="abtn srt"         onclick="selAlgo('srt',this)">SRT</button>
+        </div>
+        <div class="algo-name" id="algoName">FIRST-COME, FIRST-SERVED (FCFS)</div>
+        <div class="algo-desc" id="algoDesc">Executes processes strictly in the order they arrive in the ready queue.</div>
+      </div>
+
+      <div class="sec-head">Number of Jobs</div>
+      <div class="sec-body">
+        <div class="jobs-row">
+          <span class="jobs-label">No. of Jobs :</span>
+          <div class="jobs-input-wrap">
+            <input type="number" class="jobs-input" id="numJobs" value="4" min="1" oninput="genTable()">
+            <div class="jobs-arrows">
+              <button class="jarr" onclick="stepJobs(1)">▲</button>
+              <button class="jarr" onclick="stepJobs(-1)">▼</button>
+            </div>
+          </div>
+          <button class="sample-btn" onclick="fillSample()">SAMPLE DATA</button>
+        </div>
+      </div>
+
+      <div class="sec-head">Job Data Table</div>
+      <div class="sec-body">
+        <div class="twrap">
+          <table class="dtable">
+            <thead>
+              <tr>
+                <th>Job</th>
+                <th>Arrival</th>
+                <th>Burst</th>
+                <th id="priTh">Priority</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+        <div id="errbox"></div>
+      </div>
+
+      <div class="act-row">
+        <button class="actbtn reset"  onclick="doReset()">RESET</button>
+        <button class="actbtn submit" onclick="simulate()">SUBMIT</button>
+      </div>
+
+    </div><!-- /lpanel -->
+
+    <!-- ████ RIGHT PANEL ████ -->
+    <div class="rpanel">
+
+      <div class="sec-head">Timeline Graph</div>
+      <div class="sec-body r-top">
+        <div class="chart-scroll" id="tlwrap">
+          <div class="placeholder-msg"></div>
+        </div>
+      </div>
+
+      <div class="sec-head">Gantt Chart</div>
+      <div class="sec-body r-top">
+        <div class="chart-scroll" id="ganttOuter">
+          <div class="placeholder-msg"></div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-label">Average Turnaround Time</div>
+          <div class="stat-val" id="sTAT">—</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Average Waiting Time</div>
+          <div class="stat-val amber" id="sWT">—</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">CPU Utilization</div>
+          <div class="stat-val teal" id="sUtil">—</div>
+        </div>
+      </div>
+
+      <div class="sol-section" id="solSec">
+        <div class="sol-table-wrap">
+          <div class="sec-head" style="margin:-14px -16px 12px;padding-left:16px">Solution Breakdown</div>
+          <table class="stbl" id="stbl"></table>
+        </div>
+        <div class="util-formula-box" id="utilFormulaBox"></div>
+      </div>
+
+    </div><!-- /rpanel -->
+  </div><!-- /layout -->
+
+</div><!-- /page -->
+<script src="script.js"></script>
+</body>
+</html>
