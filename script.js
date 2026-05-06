@@ -1,18 +1,4 @@
-/* ══════════════════════════════════════════
-   CPU SCHEDULING SIMULATOR — script.js
-   VERSION 3: Full functionality
-   - Timeline & Gantt share identical px-per-unit (U) and left offset
-   - Unlimited jobs with auto-generated HSL colors
-   - Adaptive layout — no hard caps
-══════════════════════════════════════════ */
-
-/* ────────────────────────────────────────
-   COLOR GENERATION
-   Auto-generates distinct hues for any
-   number of processes using HSL spacing.
-──────────────────────────────────────── */
 function procColor(i, total) {
-  // Spread hues evenly, starting from 200° (blue) going around
   const hue   = (200 + (i * 360 / Math.max(total, 1))) % 360;
   const hex   = hslToHex(hue, 70, 65);
   const fill  = `hsla(${hue},65%,55%,0.32)`;
@@ -30,9 +16,6 @@ function hslToHex(h, s, l) {
   return `#${f(0)}${f(8)}${f(4)}`;
 }
 
-/* ────────────────────────────────────────
-   ALGORITHM DESCRIPTIONS
-──────────────────────────────────────── */
 const ADESC = {
   fcfs: { name: 'FIRST-COME, FIRST-SERVED (FCFS)',  desc: 'Executes processes strictly in the order they arrive in the ready queue.' },
   sjf:  { name: 'SHORTEST JOB FIRST (SJF)',          desc: 'Non-preemptive. Picks the process with the shortest burst time from the ready queue.' },
@@ -42,9 +25,6 @@ const ADESC = {
 
 let algo = 'fcfs';
 
-/* ════════════════════════════
-   ALGORITHM SELECT
-════════════════════════════ */
 function selAlgo(a, btn) {
   algo = a;
   document.querySelectorAll('.abtn').forEach(b => b.classList.remove('active'));
@@ -57,10 +37,6 @@ function selAlgo(a, btn) {
   clearResults();
 }
 
-/* ════════════════════════════
-   TABLE GENERATION
-   No upper limit on job count.
-════════════════════════════ */
 function genTable() {
   const n = Math.max(1, parseInt(document.getElementById('numJobs').value) || 1);
   const tb = document.getElementById('tbody');
@@ -101,9 +77,6 @@ function fillSample() {
   }
 }
 
-/* ════════════════════════════
-   READ JOBS
-════════════════════════════ */
 function readJobs() {
   const n = Math.max(1, parseInt(document.getElementById('numJobs').value) || 1);
   const js = [];
@@ -118,9 +91,6 @@ function readJobs() {
   return js;
 }
 
-/* ════════════════════════════
-   ALGORITHMS
-════════════════════════════ */
 function iSeg(s, e) {
   return { pid: -1, name: 'IDLE', start: s, end: e, color: '#282d3a', fill: '#0d0f14' };
 }
@@ -193,9 +163,6 @@ function runSRT(js) {
   return tl;
 }
 
-/* ════════════════════════════
-   METRICS
-════════════════════════════ */
 function calcMetrics(js, tl) {
   const m = {};
   js.forEach(j => m[j.id] = { ...j, ct: 0 });
@@ -222,25 +189,12 @@ function calcMetrics(js, tl) {
   };
 }
 
-/* ════════════════════════════
-   SHARED UNIT CALCULATOR
-   Both Timeline and Gantt call this to get
-   the same pixel-per-time-unit value U and
-   the same left padding PL so they align.
-════════════════════════════ */
 function calcUnit(endTime) {
-  // Use a fixed px-per-unit; clamp to keep things readable
-  // Minimum 28px/unit, maximum 60px/unit
   const available = Math.max(400, window.innerWidth - 420); // rough right-panel width
   const U = Math.max(28, Math.min(60, Math.floor(available / (endTime + 2))));
   return U;
 }
 
-/* ════════════════════════════
-   RENDER — TIMELINE SVG
-   Labels above axis, ticks below.
-   Uses same U as Gantt, no extra left padding.
-════════════════════════════ */
 function renderTimeline(js, tl) {
   const endTime = tl[tl.length - 1].end;
   const U  = calcUnit(endTime);
